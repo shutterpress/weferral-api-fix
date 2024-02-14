@@ -231,7 +231,6 @@ module.exports = function (initConfig) {
                 table.integer('customer_id').references('customers.id');
                 table.jsonb('metadata');
                 table.bigInteger('earnings');
-                table.integer('conversion_id').references('conversions.id');
                 table.bigInteger('conversion_amount');
                 table.bigInteger('amount');
                 table.string('commission_type');
