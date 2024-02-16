@@ -62,7 +62,7 @@ module.exports = function(router) {
         req.body.name = req.body.name.toLowerCase();
         let campaign = (await Campaign.find({'name': req.body.name}))[0];
 
-        if (campaign.data) {
+        if (campaign?.data) {
             return res.status(400).json({ error: "Campaign name already in use" });
         }
 
