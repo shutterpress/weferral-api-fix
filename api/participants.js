@@ -84,7 +84,7 @@ module.exports = function(router) {
                                         res.locals.valid_object = result;
                                         next();
                                         await notification("participant_invitated", campObj.data.id, newParticipant, newParticipant);
-                                        await webhook('participant_invited', participant);
+                                        await webhook('participant_invited', newParticipant);
                                     } else {
                                         res.status(403).json({error: err});
                                     }
