@@ -14,18 +14,20 @@ Ezeokeke Uche
 * Github: [@ezehuche](https://github.com/ezehuche)
 * Twitter: [@Ezeokekeuche](https://twitter.com/Ezeokekeuche)
 
+
+
 mkdir temp\
 cd temp\
-git clone https://github.com/timofverberg/weferral-api\
-git clone https://github.com/timofverberg/weferral\
+git clone https://github.com/timofverberg/weferral-api
+git clone https://github.com/timofverberg/weferral
 cd weferral-api\
-docker-compose up -d\
+docker-compose up -d
 
 Visit: http://localhost:8080\
 System: PostgreSQL\
 Server: database\
 Username: postgres\
-Password: example (set in compose.yaml)\
+Password: example (set in compose.yaml)
 
 Create database -> Name: weferral -> Save
 
@@ -47,6 +49,6 @@ Company Email: Should probably be set to something\
 Company Phone Number: Should probably be set to something\
 Cloudinary Name: Set by your cloudinary account\
 Cloudinary Api Key: Set by your cloudinary account\
-Cloudinary Api Secret: Set by your cloudinary account\
+Cloudinary Api Secret: Set by your cloudinary account
 
 
