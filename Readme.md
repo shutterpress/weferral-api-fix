@@ -23,7 +23,7 @@ git clone https://github.com/timofverberg/weferral
 cd weferral-api\
 docker-compose up -d
 
-Visit: http://localhost:8080\
+Visit: http://localhost:8080 \
 System: PostgreSQL\
 Server: database\
 Username: postgres\
