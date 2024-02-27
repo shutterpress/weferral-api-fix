@@ -32,7 +32,7 @@ module.exports = function (initConfig = null) {
             }));
             require('./api/events')(app);
             app.use(function(req, res, next) {
-                const allowedOrigins = [process.env.FRONTEND_URL, 'http://localhost:3500'];
+                const allowedOrigins = [process.env.FRONTEND_URL, "https://weferral.igambling.com/", 'http://localhost:3500'];
                 const origin = req.headers.origin;
                 if (allowedOrigins.includes(origin)) {
                     res.setHeader('Access-Control-Allow-Origin', origin);

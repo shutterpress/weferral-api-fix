@@ -158,11 +158,11 @@ let startApp = function(app, callback=null){
             //app.use(cors());
 
             app.get('/', function (req, res, next) {
-                if (req.url === '/setup') {
+                if (req.url === '/api/v1/setup') {
                     console.log(req.url);
                     next();
                 } else {
-                    res.redirect('/setup');
+                    res.redirect('/api/v1/setup');
                 }
             });
 
@@ -212,7 +212,7 @@ let startApp = function(app, callback=null){
 
             app.use(api);
 
-            app.post("/setup", function (req, res, next) {
+            app.post("/api/v1/setup", function (req, res, next) {
                 let conf = req.body;
                 console.log(JSON.stringify(conf));
 

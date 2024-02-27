@@ -2,17 +2,30 @@ version: '2.24.3'  # Use the appropriate version for your Docker Compose file
 
 services:
   service:
-    build: .
+    build:
+      context: .
+      no_cache: true
     ports:
       - "3001:3001"
+    volumes:
+      - "./env:/usr/src/app/env"
     depends_on:
       database:
         condition: service_healthy
+    environment:
+      FRONTEND_URL: https://weferral.igambling.com
+      NODE_ENV: "production"
+      BASE_PATH: "https://weferral.igambling.com/"
+      PORT: 3001
 
   frontend:
     build:
       context: ../weferral
       dockerfile: Dockerfile
+      no_cache: true
+    volumes:
+      - "./../weferral/app:/usr/src/app"
+      - "./../weferral/build:/usr/src/build"
     ports:
       - "4100:4100"
     healthcheck:
@@ -20,6 +33,10 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
+    environment:
+      NODE_ENV: "production"
+      API_URL: "https://weferral.igambling.com"
+      BASE_PATH: "/"
 
   database:
     image: postgres
@@ -29,7 +46,9 @@ services:
     healthcheck:
       test: ["CMD-SHELL", "pg_isready"]
     environment:
-      POSTGRES_PASSWORD: example
+      POSTGRES_USER: weferral
+      POSTGRES_PASSWORD: nigerianPrince123!
+      POSTGRES_DB: weferral
     volumes:
       - pgdata:/var/lib/postgresql/data
 
@@ -37,14 +56,14 @@ services:
     image: adminer
     restart: always
     ports:
-      - 8080:8080
+      - 8991:8080
 
   proxy:
     image: nginx:latest
     volumes:
       - ./proxy.conf:/etc/nginx/conf.d/default.conf
     ports:
-      - 3500:8080
+      - 80:8080
     restart: always
     depends_on:
       frontend:
