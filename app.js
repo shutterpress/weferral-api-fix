@@ -48,6 +48,24 @@ module.exports = function (initConfig = null) {
             // Preflight
             app.options('*', cors(corsOptions));
 
+            // Helpful startup log
+            console.log('[CORS] allowedOrigins ->', allowedOrigins);
+
+            // Ensure caches and proxies vary by Origin
+            app.use((req, res, next) => {
+              res.setHeader('Vary', 'Origin');
+              next();
+            });
+
+            // Fallback preflight handler (in case nothing else matches)
+            app.use((req, res, next) => {
+              if (req.method === 'OPTIONS') {
+                // Run CORS for this request, then exit with 204
+                return cors(corsOptions)(req, res, () => res.sendStatus(204));
+              }
+              return next();
+            });
+
             app.use(helmet({
                 frameguard: false
             }));
