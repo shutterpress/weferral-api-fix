@@ -13,9 +13,9 @@ services:
       database:
         condition: service_healthy
     environment:
-      FRONTEND_URL: https://weferral.igambling.com
+      FRONTEND_URL: https://affiliate.shutterpress.io
       NODE_ENV: "production"
-      BASE_PATH: "https://weferral.igambling.com/"
+      BASE_PATH: "affiliate.shutterpress.io/"
       PORT: 3001
 
   frontend:
@@ -35,7 +35,7 @@ services:
       retries: 10
     environment:
       NODE_ENV: "production"
-      API_URL: "https://weferral.igambling.com"
+      API_URL: "https://affiliate.shutterpress.io"
       BASE_PATH: "/"
 
   database:
