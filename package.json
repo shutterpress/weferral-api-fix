@@ -3,9 +3,9 @@
     "version": "0.2.1",
     "description": "Weferral API",
     "private": true,
-    "engines": {
-        "node": ">=11.8.0"
-    },
+    "engines": { 
+        "node": "18.x" 
+    }
     "scripts": {
         "start": "node ./bin/start",
         "dev": "nodemon -r esm index.js",
@@ -45,7 +45,7 @@
         "mongoose": "^5.6.11",
         "morgan": "^1.10.0",
         "multer": "^1.4.2",
-        "mysql2": "^1.6.5",
+        "mysql2": "^2.3.3",
         "nanoid": "^2.1.11",
         "node-cron": "^2.0.3",
         "node-fetch": "^2.6.1",
