@@ -9,6 +9,39 @@ var path = require('path');
 let architect = require("architect")
 var helmet = require('helmet')
 
+// app.js
+
+const cors = require('cors');
+
+const app = express();
+
+// If you use cookies/sessions behind Railway/HTTPS:
+app.set('trust proxy', 1);
+
+const allowedOrigins = [
+  'https://affiliate.shutterpress.io',
+  // add local/dev origins if you need them:
+  // 'http://localhost:3000',
+];
+
+const corsOptions = {
+  origin(origin, cb) {
+    // allow same-origin / server-to-server (no Origin header) and whitelisted origins
+    if (!origin || allowedOrigins.includes(origin)) return cb(null, true);
+    return cb(new Error('Not allowed by CORS'));
+  },
+  credentials: true, // <-- required because your fetch uses credentials: "include"
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  // exposeHeaders: ['Content-Disposition'], // add if you need to read custom response headers
+};
+
+// Must be BEFORE routes:
+app.use(cors(corsOptions));
+// Good to explicitly handle preflight:
+app.options('*', cors(corsOptions));
+
+
 module.exports = function (initConfig = null) {
     let envPath = path.join(__dirname, 'env/.env');
     require('dotenv').config({path: envPath});
