@@ -1,4 +1,3 @@
-
 let async = require("async")
 let jwt = require('jsonwebtoken');
 let bcrypt = require("bcryptjs");
@@ -6,11 +5,11 @@ let Role = require("../models/role");
 let ResetRequest = require("../models/password-reset-request")
 let User = require("../models/user");
 
-module.exports = function(app, passport) {
+module.exports = function(router, passport) {
 
     //TODO: buff up security so each user has their own secret key
     //TODO: security key..... no hardcoded strings plzzzz (along with the comment above)
-    app.post('/api/v1/auths/token', passport.authenticate('local-login', {session:false}), function(req, res) {
+    router.post('/auths/token', passport.authenticate('local-login', {session:false}), function(req, res) {
         console.log(req.user);
         let token = jwt.sign({  uid: req.user.data.id }, process.env.SECRET_KEY, { expiresIn: '3h' });
         console.log(token);
@@ -18,7 +17,7 @@ module.exports = function(app, passport) {
         res.json({token:token});
     });
 
-    app.get('/api/v1/auth/token', function(req, res) {
+    router.get('/auth/token', function(req, res) {
         console.log(req.user);
         let token = jwt.sign({  uid: req.user.data.id }, process.env.SECRET_KEY, { expiresIn: '3h' });
         console.log(token);
@@ -26,7 +25,7 @@ module.exports = function(app, passport) {
         res.json({token:token});
     });
 
-    app.get('/api/v1/auth/session/clear', function(req, res) {
+    router.get('/auth/session/clear', function(req, res) {
         res.clearCookie("permissions", {path: "/"});
         res.clearCookie("username", {path: "/"});
         res.clearCookie("uid", {path: "/"});
@@ -35,7 +34,7 @@ module.exports = function(app, passport) {
         res.json({"message" : "successful logout"});
     });
 
-    app.post("/api/v1/auth/reset-password", function(req, res, next){
+    router.post('/auth/reset-password', function(req, res, next){
         User.findOne("email", req.body.email, function(user){
             if(user.data){
                 ResetRequest.findAll("user_id", user.get("id"), function(requests){
@@ -68,7 +67,7 @@ module.exports = function(app, passport) {
         });
     });
 
-    app.get("/api/v1/auth/reset-password/:uid/:token",  function(req, res, next){
+    router.get('/auth/reset-password/:uid/:token',  function(req, res, next){
         console.log(bcrypt.hashSync(req.params.token, 10));
         ResetRequest.findOne("user_id", req.params.uid, function(result){
             if(result.data && bcrypt.compareSync(req.params.token, result.get("hash"))){
@@ -80,7 +79,7 @@ module.exports = function(app, passport) {
     });
 
     //todo -- token expiration
-    app.post("/api/v1/auth/reset-password/:uid/:token", function(req, res, next){
+    router.post('/auth/reset-password/:uid/:token', function(req, res, next){
         ResetRequest.findOne("user_id", req.params.uid , function(result){
             if(result.data && bcrypt.compareSync(req.params.token, result.get("hash"))){
                 User.findOne("id", result.get("user_id"), function(user){
@@ -100,7 +99,7 @@ module.exports = function(app, passport) {
 
     });
 
-    app.post('/api/v1/auth/session', function(req,res,next){
+    router.post('/auth/session', function(req,res,next){
         passport.authenticate('local-login', function(err, user, info) {
             if (err) { return res.json({"error" : "Invalid username or password"}); }
             if (!user) { return res.json({"error" : "Invalid username or password"}) }
