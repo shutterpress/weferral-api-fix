@@ -5,7 +5,7 @@
     "private": true,
     "engines": { 
         "node": "18.x" 
-    }
+    },
     "scripts": {
         "start": "node ./bin/start",
         "dev": "nodemon -r esm index.js",
