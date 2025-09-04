@@ -141,21 +141,36 @@ let startApp = function(app, callback=null){
             let bodyParser = require('body-parser');
 
             let app = express()
+
+            // Trust proxy so cookies/proto are detected correctly behind Railway/HTTPS
+            app.set('trust proxy', 1);
+
+            const allowedOrigins = [
+              process.env.FRONTEND_URL,
+              'https://affiliate.shutterpress.io',
+              'http://localhost:3500'
+            ].filter(Boolean);
+
+            app.use((req, res, next) => {
+              const origin = req.headers.origin;
+
+              if (!origin || allowedOrigins.includes(origin)) {
+                res.setHeader('Access-Control-Allow-Origin', origin || '*');
+                if (origin) res.setHeader('Access-Control-Allow-Credentials', 'true');
+                res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
+                res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Authorization, Accept');
+                res.setHeader('Vary', 'Origin');
+              }
+
+              if (req.method === 'OPTIONS') return res.sendStatus(204);
+              next();
+            });
+
             app.use(bodyParser.json());
             app.use(bodyParser.urlencoded({
                 extended: false
             }));
             let api = express.Router();
-
-            app.use(function(req, res, next) {
-                res.header("Access-Control-Allow-Origin", "*");
-                res.header("Access-Control-Allow-Methods", "*");
-                res.header('Access-Control-Allow-Headers', "*");
-                //res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-                next();
-            });
-
-            //app.use(cors());
 
             app.get('/', function (req, res, next) {
                 if (req.url === '/api/v1/setup') {
