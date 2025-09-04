@@ -110,7 +110,10 @@ let startApp = function(app, callback=null){
     }
 };
 
-    if(!fs.existsSync(path.join(__dirname, '../env/.env'))){
+    if(
+        !fs.existsSync(path.join(__dirname, '../env/.env')) &&
+        !(process.env.POSTGRES_DB_USER && process.env.POSTGRES_DB_HOST && process.env.POSTGRES_DB_NAME && process.env.POSTGRES_DB_PASSWORD)
+      ){
         //check to see if environment variables declared...
         let conf = {
             "db_user": process.env.POSTGRES_DB_USER,
@@ -171,6 +174,14 @@ let startApp = function(app, callback=null){
                 extended: false
             }));
             let api = express.Router();
+
+            // Minimal placeholder endpoints while in setup mode so the SPA doesn't 404
+            app.get('/api/v1/system-options/public', (req, res) => {
+                res.json({});
+            });
+            app.get('/api/v1/notifications/unread', (req, res) => {
+                res.json([]);
+            });
 
             app.get('/', function (req, res, next) {
                 if (req.url === '/api/v1/setup') {
