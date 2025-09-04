@@ -32,7 +32,7 @@ module.exports = function (initConfig = null) {
             }));
             require('./api/events')(app);
             app.use(function(req, res, next) {
-                const allowedOrigins = [process.env.FRONTEND_URL, "https://affiliate.shutterpress.io/", 'http://localhost:3500'];
+                const allowedOrigins = [process.env.FRONTEND_URL, "https://affiliate.shutterpress.io", 'http://localhost:3500'];
                 const origin = req.headers.origin;
                 if (allowedOrigins.includes(origin)) {
                     res.setHeader('Access-Control-Allow-Origin', origin);
@@ -67,11 +67,15 @@ module.exports = function (initConfig = null) {
             app.use(flash());
 
             //auth route doesn't go in express route so it doesn't need auth
-            require("./api/auth")(app, passport);
+           // require("./api/auth")(app, passport);
 
             //initialize api route
             var api = express.Router();
             app.use("/api/v1", api);
+
+                        // Mount auth under /api/v1 so client calls to /api/v1/auth/* work
+            require("./api/auth")(api, passport);
+
 
             //force all requests to api route to look for token, if token is present in header the user will be logged in with that token
             api.use(function (req, res, next) {
